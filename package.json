@@ -1,0 +1,24 @@
+{
+  "name": "gateway",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start" : "nodemon app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "express-http-proxy": "^2.1.1",
+    "express-rate-limit": "^8.0.1",
+    "ioredis": "^5.6.1",
+    "morgan": "^1.10.1",
+    "rate-limit-redis": "^4.2.1"
+  }
+}
