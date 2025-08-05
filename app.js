@@ -11,19 +11,19 @@ const app = express();
 app.use(logger("dev"))
 app.use(cors({origin: "http://localhost:5173"}))
 
-const limiter = rateLimit({
-  store: new RedisStore({
-    sendCommand: (...args) => redisClient.call(...args),
-    prefix: "rl-global",
-  }),
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  message: "Too many requests from this IP. Please try again later.",
-  standardHeaders: true,
-  legacyHeaders: false,
-});
+// const limiter = rateLimit({
+//   store: new RedisStore({
+//     sendCommand: (...args) => redisClient.call(...args),
+//     prefix: "rl-global",
+//   }),
+//   windowMs: 15 * 60 * 1000,
+//   max: 100,
+//   message: "Too many requests from this IP. Please try again later.",
+//   standardHeaders: true,
+//   legacyHeaders: false,
+// });
 
-app.use(limiter);
+// app.use(limiter);
 
 const userLimiter = rateLimit({
   store: new RedisStore({
@@ -51,7 +51,6 @@ app.use("/ai", expressProxy("http://localhost:3003"))
 app.use("/orgs", expressProxy("http://localhost:3004"))
 app.use("/result", expressProxy("http://localhost:3005"))
 app.use("/test", expressProxy("http://localhost:3006"))
-app.use("/question", expressProxy("http://localhost:3007"))
 
 app.listen(3000,()=>{
     console.log("GateWay Running on 3000")
