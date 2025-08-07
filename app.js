@@ -27,7 +27,7 @@ const globalLimiter = rateLimit({
     prefix: "rl-global",
   }),
   windowMs: 15 * 60 * 1000, // 15 min
-  max: 500,
+  max: 2000,
   message: "Too many requests from this IP. Please try again later.",
   standardHeaders: true,
   legacyHeaders: false,
@@ -39,7 +39,7 @@ const userLimiter = rateLimit({
     prefix: "rl-user",
   }),
   windowMs: 10 * 60 * 1000, // 10 min
-  max: 50,
+  max: 500,
   message: "User service rate limit exceeded.",
 });
 
@@ -48,8 +48,8 @@ const adminLimiter = rateLimit({
     sendCommand: (...args) => redisClient.call(...args),
     prefix: "rl-admin",
   }),
-  windowMs: 10 * 60 * 1000,
-  max: 20,
+  windowMs: 10 * 60 * 1000, // 10 min
+  max: 200,
   message: "Admin service rate limit exceeded.",
 });
 
@@ -88,6 +88,5 @@ app.use("/result", makeProxy("http://localhost:3005"));
 app.use("/test", makeProxy("http://localhost:3006"));
 
 // ----------------------
-app.listen(3000, () => {
-  console.log("Gateway running on 3000");
-});
+
+export default app;
