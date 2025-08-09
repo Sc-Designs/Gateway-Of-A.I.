@@ -71,6 +71,33 @@ export default function socketHandler(io) {
         });
       }
     });
+    socket.on("set-delete", async ({ from, give, token, data }) => {
+      try {
+        const res = await axios.delete(`${process.env.TEST_API_URL}/delete`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: { id: data },
+        });
+
+        if (res.status === 200) {
+          io.to(`org-${give}`).emit("set-delete-success", {
+            message: res.data.message,
+            setId: res.data.setId || data, // fallback to the sent id if API didn't return it
+            warning: res.data.warning || null,
+          });
+        } else {
+          io.to(`org-${give}`).emit("set-delete-failed", {
+            error: res.data.message || "Failed to delete set",
+          });
+        }
+      } catch (error) {
+        console.error("Set delete error:", error.message);
+        io.to(`org-${give}`).emit("set-delete-failed", {
+          error: error.response?.data || "Failed to delete set",
+        });
+      }
+    });
 
     socket.on("disconnect", () => {
       console.log("Client disconnected:", socket.id);
