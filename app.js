@@ -75,6 +75,7 @@ const makeProxy = (target) =>
     },
     proxyErrorHandler: (err, res) => {
       console.error(`[Proxy ${target}]`, err);
+      console.log(err);
       res.status(502).json({ message: "Upstream service error" });
     },
   });
