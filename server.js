@@ -16,6 +16,6 @@ const io = new Server(server, {
 socketHandler(io);
 
 // Run the server
-server.listen(3000, () => {
+server.listen(process.env.PORT || 3000, () => {
   console.log("Gateway (with Socket.IO) running on port 3000");
 });
