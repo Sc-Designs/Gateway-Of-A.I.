@@ -4,6 +4,10 @@ export default function socketHandler(io) {
   io.on("connection", (socket) => {
     console.log("Client connected:", socket.id);
 
+    socket.on("pingCheck", () => {
+    socket.emit("pongCheck");
+  });
+
     socket.on("join", ({ role, id }) => {
       const room = `${role}-${id}`;
       socket.join(room);
