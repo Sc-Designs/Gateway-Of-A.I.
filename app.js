@@ -62,7 +62,11 @@ app.use(globalLimiter);
 // ----------------------
 const makeProxy = (target) =>
   expressProxy(target, {
-    parseReqBody: false, // ✅ allows multipart streaming
+    parseReqBody: (req) => {
+      const contentType = req.headers["content-type"] || "";
+      // Parse body except for multipart (file uploads)
+      return !contentType.startsWith("multipart/");
+    },
     preserveHostHdr: true,
     proxyReqPathResolver: (req) => req.url,
     proxyReqOptDecorator: (proxyReqOpts, srcReq) => {
@@ -75,7 +79,6 @@ const makeProxy = (target) =>
     },
     proxyErrorHandler: (err, res) => {
       console.error(`[Proxy ${target}]`, err);
-      console.log(err);
       res.status(502).json({ message: "Upstream service error" });
     },
   });
@@ -83,13 +86,27 @@ const makeProxy = (target) =>
 // ----------------------
 // MOUNT SERVICES
 // ----------------------
-console.log("User"+ process.env.USER_API_URL + "Admin" + process.env.ADMIN_API_URL + "ai" + process.env.AI_API_URL + "Orgs" + process.env.ORG_API_URL + "result" + process.env.RESULT_API_URL + "test" + process.env.TEST_API_URL);
-app.use("/user", userLimiter, makeProxy(process.env.USER_API_URL));
+
+// Log user requests before proxying
+app.use("/user", userLimiter, (req, res, next) => {
+  console.log(`[Gateway → User] ${req.method} ${req.url}`);
+  next();
+}, makeProxy(process.env.USER_API_URL));
+
 app.use("/admin", adminLimiter, makeProxy(process.env.ADMIN_API_URL));
 app.use("/ai", makeProxy(process.env.AI_API_URL));
 app.use("/orgs", makeProxy(process.env.ORG_API_URL));
 app.use("/result", makeProxy(process.env.RESULT_API_URL));
 app.use("/test", makeProxy(process.env.TEST_API_URL));
+
+console.log(
+  "User" + process.env.USER_API_URL +
+  " Admin" + process.env.ADMIN_API_URL +
+  " ai" + process.env.AI_API_URL +
+  " Orgs" + process.env.ORG_API_URL +
+  " result" + process.env.RESULT_API_URL +
+  " test" + process.env.TEST_API_URL
+);
 
 // ----------------------
 
