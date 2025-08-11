@@ -80,12 +80,12 @@ const makeProxy = (target) =>
 // ----------------------
 // MOUNT SERVICES
 // ----------------------
-app.use("/user", userLimiter, makeProxy("http://localhost:3001"));
-app.use("/admin", adminLimiter, makeProxy("http://localhost:3002"));
-app.use("/ai", makeProxy("http://localhost:3003"));
-app.use("/orgs", makeProxy("http://localhost:3004"));
-app.use("/result", makeProxy("http://localhost:3005"));
-app.use("/test", makeProxy("http://localhost:3006"));
+app.use("/user", userLimiter, makeProxy(process.env.USER_API_URL));
+app.use("/admin", adminLimiter, makeProxy(process.env.ADMIN_API_URL));
+app.use("/ai", makeProxy(process.env.AI_API_URL));
+app.use("/orgs", makeProxy(process.env.ORG_API_URL));
+app.use("/result", makeProxy(process.env.RESULT_API_URL));
+app.use("/test", makeProxy(process.env.TEST_API_URL));
 
 // ----------------------
 
