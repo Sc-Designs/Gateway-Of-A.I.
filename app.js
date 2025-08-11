@@ -60,7 +60,7 @@ app.use(globalLimiter);
 // ----------------------
 // PROXY CREATOR
 // ----------------------
-const makeProxy = (target) =>
+const makeProxy = (target, stripPrefix = "") =>
   expressProxy(target, {
     parseReqBody: (req) => {
       const contentType = req.headers["content-type"] || "";
@@ -68,7 +68,12 @@ const makeProxy = (target) =>
       return !contentType.startsWith("multipart/");
     },
     preserveHostHdr: true,
-    proxyReqPathResolver: (req) => req.url,
+    proxyReqPathResolver: (req) => {
+      if (stripPrefix && req.url.startsWith(stripPrefix)) {
+        return req.url.slice(stripPrefix.length) || "/";
+      }
+      return req.url;
+    },
     proxyReqOptDecorator: (proxyReqOpts, srcReq) => {
       proxyReqOpts.headers = {
         ...proxyReqOpts.headers,
@@ -87,11 +92,16 @@ const makeProxy = (target) =>
 // MOUNT SERVICES
 // ----------------------
 
-// Log user requests before proxying
-app.use("/user", userLimiter, (req, res, next) => {
-  console.log(`[Gateway → User] ${req.method} ${req.url}`);
-  next();
-}, makeProxy(process.env.USER_API_URL));
+// Log and proxy /user with prefix stripping
+app.use(
+  "/user",
+  userLimiter,
+  (req, res, next) => {
+    console.log(`[Gateway → User] ${req.method} ${req.url}`);
+    next();
+  },
+  makeProxy(process.env.USER_API_URL, "/user")
+);
 
 app.use("/admin", adminLimiter, makeProxy(process.env.ADMIN_API_URL));
 app.use("/ai", makeProxy(process.env.AI_API_URL));
