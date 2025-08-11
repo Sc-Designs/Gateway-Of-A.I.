@@ -83,6 +83,7 @@ const makeProxy = (target) =>
 // ----------------------
 // MOUNT SERVICES
 // ----------------------
+console.log("User"+ process.env.USER_API_URL + "Admin" + process.env.ADMIN_API_URL + "ai" + process.env.AI_API_URL + "Orgs" + process.env.ORG_API_URL + "result" + process.env.RESULT_API_URL + "test" + process.env.TEST_API_URL);
 app.use("/user", userLimiter, makeProxy(process.env.USER_API_URL));
 app.use("/admin", adminLimiter, makeProxy(process.env.ADMIN_API_URL));
 app.use("/ai", makeProxy(process.env.AI_API_URL));
