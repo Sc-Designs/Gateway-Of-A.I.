@@ -93,6 +93,9 @@ const makeProxy = (target, stripPrefix = "") =>
 // ----------------------
 
 // Log and proxy /user with prefix stripping
+app.use("/",(req, res)=>{
+  res.send("Welcome to the Gateway API");
+});
 app.use(
   "/user",
   userLimiter,
