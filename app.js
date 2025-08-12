@@ -14,7 +14,7 @@ app.set("trust proxy", 1);
 app.use(logger("dev"));
 app.use(
   cors({
-    origin: "https://ai-interviewer-sc-designs.netlify.app/",
+    origin: "https://ai-interviewer-sc-designs.netlify.app",
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization", "Accept"],
   })
