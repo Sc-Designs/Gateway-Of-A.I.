@@ -17,7 +17,7 @@ app.use(
     origin: "https://ai-interviewer-sc-designs.netlify.app",
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization", "Accept"],
-  })
+  }),
 );
 
 // ----------------------
