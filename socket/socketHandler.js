@@ -17,11 +17,12 @@ export default function socketHandler(io) {
     socket.on("block-user", async({from, give, to, token}) =>{
       try {
         const res = await axios.post(
-          `${process.env.USER_API_URL}/block-user`,
+          `${process.env.USER_API_URL}/api/block-user`,
           { to },
           {
             headers: {
               Authorization: `Bearer ${token}`,
+              "x-gateway-secret": process.env.GATEWAY_SECRET,
             },
           }
         );
@@ -47,11 +48,12 @@ export default function socketHandler(io) {
     socket.on("block-org", async ({ from, give, to, token }) => {
       try {
         const res = await axios.post(
-          `${process.env.ORG_API_URL}/block-org`,
+          `${process.env.ORG_API_URL}/api/block-org`,
           { to },
           {
             headers: {
               Authorization: `Bearer ${token}`,
+              "x-gateway-secret": process.env.GATEWAY_SECRET,
             },
           }
         );
@@ -77,9 +79,10 @@ export default function socketHandler(io) {
     });
     socket.on("set-delete", async ({ from, give, token, data }) => {
       try {
-        const res = await axios.delete(`${process.env.TEST_API_URL}/delete`, {
+        const res = await axios.delete(`${process.env.TEST_API_URL}/api/delete`, {
           headers: {
             Authorization: `Bearer ${token}`,
+            "x-gateway-secret": process.env.GATEWAY_SECRET,
           },
           data: { id: data },
         });

@@ -1,4 +1,5 @@
 import http from "http";
+import "dotenv/config";
 import { Server } from "socket.io";
 import app from "./app.js";
 import socketHandler from "./socket/socketHandler.js";
@@ -7,7 +8,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "https://ai-interviewer-sc-designs.netlify.app",
+    origin: process.env.Frontend_URL || "http://localhost:5173",
     credentials: true,
   },
 });
