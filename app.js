@@ -109,15 +109,6 @@ app.use(
     origin: (origin, callback) => {
       // Block requests with no origin (except in dev/test for tooling like curl)
       if (!origin) {
-       const safePaths = ["/health", "/"];
-       if (
-         process.env.NODE_ENV === "production" &&
-         !safePaths.includes(req.path)
-       ) {
-         return callback(
-           new Error("Requests without an Origin are not allowed"),
-         );
-       }
         return callback(null, true);
       }
       if (allowedOrigins.includes(origin)) {
